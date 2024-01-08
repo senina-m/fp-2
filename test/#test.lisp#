@@ -13,5 +13,8 @@
                                              :if-does-not-exist :create)
             (print-trie stream (make-trie :initial-contents words)))))
 
+(lisp-unit:define-test make-trie
+    (;; to do smth
+        (lisp-unitm:assert-equal "abc" (make-trie ))))
 
 (lisp-unit:run-tests)

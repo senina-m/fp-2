@@ -2,10 +2,11 @@
  (:use :cl)
  (:export :make-trie 
     :insert 
-    :words 
-    :search-trie 
-    :prefix 
-    :suffixes))
+    :search-trie
+    :print-trie
+    :words
+    :map-trie
+    ))
 
   (in-package :trie)
   
@@ -71,6 +72,14 @@
                 ;; в цикле ходим по всем суфиксам из этой ноды и рекурсивно ждём от них все слова
             (t (loop :for suffix :in suffixes :append (words suffix (if prefix (cons prefix stack) stack)))))))
 
+(defun map-trie(trie fun)
+    (mapcar fun (trie:words trie)))
+
+; (defun map-trie (trie)
+;     (mapcar #'(lambda (x) (format "~a~%" x)) (words trie))
+;     ;(mapcar fun (words trie))
+    ; )
+
 (defun search-trie (trie prefix)
     (if (string= prefix "")
         ;; если префикс -- пустая строка, выводим все слова дерева
@@ -94,12 +103,12 @@
       (t (write-char #\) stream)))
 
     (loop :for s :in suffixes
-          :do (print-trie stream s (+ 2 indent))))
+          :do (print-trie stream s (+ 2 indent)))))
 
 (defmethod print-object ((obj trie) stream)
-    (print-unreadable-object (obj stream :type t)
-        (let ((suffixes (suffixes obj)))
-            (if suffixes
-                (loop :for suffix :in (suffixes obj) 
-                      :do (print-trie stream suffix))
-                (write-string "NIL" stream)))))
+  (print-unreadable-object (obj stream :type t)
+    (let ((suffixes (suffixes obj)))
+      (if suffixes
+          (loop :for suffix :in (suffixes obj)
+                :do (print-trie stream suffix))
+          (write-string "NIL" stream)))))

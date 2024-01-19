@@ -154,7 +154,29 @@
 		       (lisp-unit:assert-true (sum-property-based)))
 ```
 
+### Результаты тестирования
+
+```
+root@75271230bb11:/app# sbcl --script test/test.lisp
+To load "lisp-unit":
+  Load 1 ASDF system:
+    lisp-unit
+; Loading "lisp-unit"
+
+To load "check-it":
+  Load 1 ASDF system:
+    check-it
+; Loading "check-it"
+
+Unit Test Summary
+ | 21 assertions total
+ | 21 passed
+ | 0 failed
+ | 1 execution errors
+ | 0 missing tests
+```
+
 # Заключение
 
 В этой лаборатороной работе я познакомилась c классами в common lisp. И его системами тестирования.
-Первый раз попробовала подход property-based testing
+Первый раз попробовала подход property-based testing.

@@ -126,61 +126,61 @@
                      (trie:make-trie :initial-contents lst)))))
 
 (lisp-unit:define-test test-1
-		       (lisp-unit:assert-true (creation-test "test/test1" "test/test1-answers" '())))
+		       (lisp-unit:assert-true (creation-test "test/files/test1" "test/files/answers-1" '())))
 
 (lisp-unit:define-test test-2
-		       (lisp-unit:assert-true (creation-test "test/test2" "test/test2-answers" '("b" "a" "c"))))
+		       (lisp-unit:assert-true (creation-test "test/files/test2" "test/files/answers-2" '("b" "a" "c"))))
 
 (lisp-unit:define-test test-3
-		       (lisp-unit:assert-true (creation-test "test/test3" "test/test3-answers" '("bac" "acd" "acdb"))))
+		       (lisp-unit:assert-true (creation-test "test/files/test3" "test/files/answers-3" '("bac" "acd" "acdb"))))
 
 (lisp-unit:define-test test-4
-		       (lisp-unit:assert-true (insert-test "test/test4" "test/test4-answers" '() "name")))
+		       (lisp-unit:assert-true (insert-test "test/files/test4" "test/files/answers-4" '() "name")))
 
 (lisp-unit:define-test test-5
-		       (lisp-unit:assert-true (insert-test "test/test5" "test/test5-answers" '("b" "a" "c") "c")))
+		       (lisp-unit:assert-true (insert-test "test/files/test5" "test/files/answers-5" '("b" "a" "c") "c")))
 
 (lisp-unit:define-test test-6
-		       (lisp-unit:assert-true (insert-test "test/test6" "test/test6-answers" '("b" "a" "c") "ca")))
+		       (lisp-unit:assert-true (insert-test "test/files/test6" "test/files/answers-6" '("b" "a" "c") "ca")))
 
 (lisp-unit:define-test test-7
-		       (lisp-unit:assert-true (words-test "test/test7" "test/test7-answers" '())))
+		       (lisp-unit:assert-true (words-test "test/files/test7" "test/files/answers-7" '())))
 
 (lisp-unit:define-test test-8
-		       (lisp-unit:assert-true (words-test "test/test8" "test/test8-answers" '("b" "a" "c"))))
+		       (lisp-unit:assert-true (words-test "test/files/test8" "test/files/answers-8" '("b" "a" "c"))))
 
 (lisp-unit:define-test test-9
-		       (lisp-unit:assert-true (words-test "test/test9" "test/test9-answers" '("bcd" "bcdf" "cab"))))
+		       (lisp-unit:assert-true (words-test "test/files/test9" "test/files/answers-9" '("bcd" "bcdf" "cab"))))
 
 (lisp-unit:define-test test-10
-		       (lisp-unit:assert-true (map-test "test/test10" "test/test10-answers" '() (lambda (x) (length x)))))
+		       (lisp-unit:assert-true (map-test "test/files/test10" "test/files/answers-10" '() (lambda (x) (length x)))))
 
 (lisp-unit:define-test test-11
-		       (lisp-unit:assert-true (map-test "test/test11" "test/test11-answers" '("b" "ac" "acb") (lambda (x) (length x)))))
+		       (lisp-unit:assert-true (map-test "test/files/test11" "test/files/answers-11" '("b" "ac" "acb") (lambda (x) (length x)))))
 
 (lisp-unit:define-test test-12
-		       (lisp-unit:assert-true (search-test "test/test12" "test/test12-answers" '("bcd" "bcdf" "cab") "")))
+		       (lisp-unit:assert-true (search-test "test/files/test12" "test/files/answers-12" '("bcd" "bcdf" "cab") "")))
 
 (lisp-unit:define-test test-13
-		       (lisp-unit:assert-true (search-test "test/test13" "test/test13-answers" '("bcd" "bcdf" "cab") "bc")))
+		       (lisp-unit:assert-true (search-test "test/files/test13" "test/files/answers-13" '("bcd" "bcdf" "cab") "bc")))
 
 (lisp-unit:define-test test-14
-		       (lisp-unit:assert-true (search-test "test/test14" "test/test14-answers" '("bcd" "bcdf" "cab") "d")))
+		       (lisp-unit:assert-true (search-test "test/files/test14" "test/files/answers-14" '("bcd" "bcdf" "cab") "d")))
 
 (lisp-unit:define-test test-15
-		       (lisp-unit:assert-true (delete-test "test/test15" "test/test15-answers" '("bcd" "bcdf" "cab") "")))
+		       (lisp-unit:assert-true (delete-test "test/files/test15" "test/files/answers-15" '("bcd" "bcdf" "cab") "")))
 
 (lisp-unit:define-test test-16
-		       (lisp-unit:assert-true (delete-test "test/test16" "test/test16-answers" '("bcd" "bcdf" "cab") "b")))
+		       (lisp-unit:assert-true (delete-test "test/files/test16" "test/files/answers-16" '("bcd" "bcdf" "cab") "b")))
 
 (lisp-unit:define-test test-17
-		       (lisp-unit:assert-true (delete-test "test/test17" "test/test17-answers" '("bcd" "bcdf" "cab") "ds")))
+		       (lisp-unit:assert-true (delete-test "test/files/test17" "test/files/answers-17" '("bcd" "bcdf" "cab") "ds")))
 
 (lisp-unit:define-test test-18
-		       (lisp-unit:assert-true (sum-test "test/test18" "test/test18-answers" '("bcd" "bcdf" "cab") '("bcd" "bc" "acb"))))
+		       (lisp-unit:assert-true (sum-test "test/files/test18" "test/files/answers-18" '("bcd" "bcdf" "cab") '("bcd" "bc" "acb"))))
 
 (lisp-unit:define-test test-19
-		       (lisp-unit:assert-true (sum-test "test/test19" "test/test19-answers" '("bcd" "bcdf" "cab") "ds")))
+		       (lisp-unit:assert-true (sum-test "test/files/test19" "test/files/answers-19" '("bcd" "bcdf" "cab") "ds")))
 
 (lisp-unit:define-test test-20
 		       (lisp-unit:assert-true (create-property-based)))

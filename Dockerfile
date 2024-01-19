@@ -1,4 +1,4 @@
-FROM clfoundation/sbcl:2.2.2-slim
+FROM clfoundation/sbcl:2.1.5-alpine3.13
 ARG QUICKLISP_DIST_VERSION=2022-02-20
 
 

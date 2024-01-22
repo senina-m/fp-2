@@ -21,17 +21,17 @@
   (not (set-exclusive-or (trie:list-words t1) (trie:list-words t2) :test #'string=)))
 
 (defun gen-str (len)
-	(let ((l 
-		   (check-it:generate (check-it:generator (list (character #\a #\z) :min-length 0 :max-length len)))))
-	(if (null l)
-		nil
-		(concatenate 'string l))))
+  (let ((l
+	 (check-it:generate (check-it:generator (list (character #\a #\z) :min-length 0 :max-length len)))))
+    (if (null l)
+	nil
+      (concatenate 'string l))))
 
 (defun gen-str-list()
-	(let ((list-len (check-it:generate (check-it:generator (integer -1 10))))
+  (let ((list-len (check-it:generate (check-it:generator (integer -1 10))))
         (str-len (check-it:generate (check-it:generator (integer 0 10)))))
-        (loop for i from 0 to list-len
-			collect (gen-str str-len))))
+    (loop for i from 0 to list-len
+	  collect (gen-str str-len))))
 
 (defun compare-files (fst-name snd-name)
   (with-open-file (i-res fst-name
@@ -199,17 +199,17 @@
 
 (lisp-unit:run-tests)
 
-; (with-open-file (output "tmp"
-; 				:direction :output
-; 				:if-exists :supersede)
-; 				(print-trie output (copy (make-trie :initial-contents '("abf" "ad" "abd")))))
+					; (with-open-file (output "tmp"
+					; 				:direction :output
+					; 				:if-exists :supersede)
+					; 				(print-trie output (copy (make-trie :initial-contents '("abf" "ad" "abd")))))
 
-; (setf ctrie (copy (make-trie :initial-contents '("abf" "ad" "abd"))))
+					; (setf ctrie (copy (make-trie :initial-contents '("abf" "ad" "abd"))))
 
-; (let ((tr (make-trie :initial-contents '("abf" "ad"))))
-;  	(delete-trie tr "ab")
-;  	; (insert tr "abc")
-; 	tr)
+					; (let ((tr (make-trie :initial-contents '("abf" "ad"))))
+					;  	(delete-trie tr "ab")
+					;  	; (insert tr "abc")
+					; 	tr)
 
-; (let ((trie (make-instance 'trie)))
-; 	(insert (insert trie "a") "bcd"))
+					; (let ((trie (make-instance 'trie)))
+					; 	(insert (insert trie "a") "bcd"))

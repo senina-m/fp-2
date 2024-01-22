@@ -25,13 +25,13 @@
     :accessor suffixes)))
 
 (defun copy (trie)
-	(let ((new-trie (make-instance 'trie)))
-		(if (null trie) ()
-				(progn
-					(setf (prefix new-trie) (prefix trie))
-					(setf (suffixes new-trie) 
-							(mapcar #'(lambda (s) (copy s)) (suffixes trie)))))
-	new-trie))
+  (let ((new-trie (make-instance 'trie)))
+    (if (null trie) ()
+      (progn
+	(setf (prefix new-trie) (prefix trie))
+	(setf (suffixes new-trie)
+	      (mapcar #'(lambda (s) (copy s)) (suffixes trie)))))
+    new-trie))
 
 (defun trunk (trie word)
   ;; чистая функция
@@ -61,26 +61,26 @@
     (make-instance 'trie)))
 
 (defun insert (trie word)
-	(let ((ctrie (copy trie)))
-	;; находим максимальный префикс, записываем его в rest
-	(multiple-value-bind (trunk rest) (trunk ctrie word)
-		(cond
-			((not (null rest))
-				;; если суфикс не нулевой (такого значения ещё нет) добавляем
-				;; в суффиксы этого узла все остальные суфиксы слова
-				; находим максимальный префикс, записываем его в rest
-				(push (make-suffix rest) (suffixes trunk))))
-	ctrie)))
+  (let ((ctrie (copy trie)))
+    ;; находим максимальный префикс, записываем его в rest
+    (multiple-value-bind (trunk rest) (trunk ctrie word)
+			 (cond
+			  ((not (null rest))
+			   ;; если суфикс не нулевой (такого значения ещё нет) добавляем
+			   ;; в суффиксы этого узла все остальные суфиксы слова
+					; находим максимальный префикс, записываем его в rest
+			   (push (make-suffix rest) (suffixes trunk))))
+			 ctrie)))
 
 ;; конструктор
 (defun make-trie (&key initial-contents)
-	(create-trie (make-instance 'trie) initial-contents))
+  (create-trie (make-instance 'trie) initial-contents))
 
 (defun create-trie (trie initial-contents)
-	(if (null initial-contents) trie
-		(if (null (cdr initial-contents))
-			(insert trie (car initial-contents))
-			(create-trie (insert trie (car initial-contents)) (cdr initial-contents)))))
+  (if (null initial-contents) trie
+    (if (null (cdr initial-contents))
+	(insert trie (car initial-contents))
+      (create-trie (insert trie (car initial-contents)) (cdr initial-contents)))))
 
 (defun words (trie &optional stack)
   (let ((prefix (prefix trie))
@@ -95,9 +95,9 @@
      (t (loop :for suffix :in suffixes :append (words suffix (if prefix (cons prefix stack) stack)))))))
 
 (defun list-words (trie)
-	(if (null trie)
-		nil
-		(words trie)))
+  (if (null trie)
+      nil
+    (words trie)))
 
 (defun map-trie(trie fun)
   (mapcar fun (list-words trie)))
@@ -122,17 +122,17 @@
   )
 
 (defun delete-trie (trie prefix)
-	(let ((ctrie (copy trie)))
-		(if (string= prefix "")
-			;; если префикс -- пустая строка, выводим пустое дерево
-			(setf (suffixes ctrie) nil)
-			;; ищем, есть ли такой префикс в нашем дереве
-			(multiple-value-bind (trunk rest) (trunk ctrie prefix)
-					;; если есть полное совпадение, т.е. rest = nil
-					(if (null rest)
-							; присваеваем суфиксам этой ноды пустой список
-						(setf (suffixes trunk) nil))))
-	ctrie))
+  (let ((ctrie (copy trie)))
+    (if (string= prefix "")
+	;; если префикс -- пустая строка, выводим пустое дерево
+	(setf (suffixes ctrie) nil)
+      ;; ищем, есть ли такой префикс в нашем дереве
+      (multiple-value-bind (trunk rest) (trunk ctrie prefix)
+			   ;; если есть полное совпадение, т.е. rest = nil
+			   (if (null rest)
+					; присваеваем суфиксам этой ноды пустой список
+			       (setf (suffixes trunk) nil))))
+    ctrie))
 
 (defun sum-tries (trie-1 trie-2)
   (let ((words-1 (list-words trie-1))

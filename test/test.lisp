@@ -7,18 +7,18 @@
 					;                             :direction :output
 					;                             :if-exists :supersede)
 					;                     (progn
-					;                     (mapcar #'(lambda(x) (format output "~a~%" x)) (trie:words t1))
+					;                     (mapcar #'(lambda(x) (format output "~a~%" x)) (trie:list-words t1))
 					;                     (trie:print-trie output t1)))
 					;     (with-open-file (output "tmp2"
 					;                             :direction :output
 					;                             :if-exists :supersede)
 					;                     (progn
-					;                     (mapcar #'(lambda(x) (format output "~a~%" x)) (sort (trie:words t2) #'string-lessp))
+					;                     (mapcar #'(lambda(x) (format output "~a~%" x)) (sort (trie:list-words t2) #'string-lessp))
 					;                     (trie:print-trie output t2)))
 
 (defun compare-tries (t1 t2)
 					;это будет работать пока мы уверены, что words возвращает set т.е. без повторений
-  (not (set-exclusive-or (trie:words t1) (trie:words t2) :test #'string=)))
+  (not (set-exclusive-or (trie:list-words t1) (trie:list-words t2) :test #'string=)))
 
 (defun gen-str (len)
   (check-it:generate (check-it:generator (string :min-length 2 :max-length len))))
@@ -62,7 +62,7 @@
                           :direction :output
                           :if-exists :supersede)
 		  (mapcar #'(lambda(x) (format output "~a~%" x))
-			  (trie:words (trie:make-trie :initial-contents initial-contents))))
+			  (trie:list-words (trie:make-trie :initial-contents initial-contents))))
   (compare-files res-name answer-name))
 
 (defun map-test(res-name answer-name initial-contents func)
@@ -192,3 +192,18 @@
 		       (lisp-unit:assert-true (insert-property-based)))
 
 (lisp-unit:run-tests)
+
+; (with-open-file (output "tmp"
+; 				:direction :output
+; 				:if-exists :supersede)
+; 				(print-trie output (copy (make-trie :initial-contents '("abf" "ad" "abd")))))
+
+; (setf ctrie (copy (make-trie :initial-contents '("abf" "ad" "abd"))))
+
+; (let ((tr (make-trie :initial-contents '("abf" "ad"))))
+;  	(delete-trie tr "ab")
+;  	; (insert tr "abc")
+; 	tr)
+
+; (let ((trie (make-instance 'trie)))
+; 	(insert (insert trie "a") "bcd"))

@@ -4,7 +4,7 @@
 	   :insert
 	   :search-trie
 	   :print-trie
-	   :words
+	   :list-words
 	   :map-trie
 	   :delete-trie
 	   :lreduce-trie
@@ -23,6 +23,15 @@
     :initarg :suffixes
     :initform nil
     :accessor suffixes)))
+
+(defun copy (trie)
+	(let ((new-trie (make-instance 'trie)))
+		(if (null trie) ()
+				(progn
+					(setf (prefix new-trie) (prefix trie))
+					(setf (suffixes new-trie) 
+							(mapcar #'(lambda (s) (copy s)) (suffixes trie)))))
+	new-trie))
 
 (defun trunk (trie word)
   ;; чистая функция
@@ -52,23 +61,30 @@
     (make-instance 'trie)))
 
 (defun insert (trie word)
-  ;; находим максимальный префикс, записываем его в rest
-  (multiple-value-bind (trunk rest) (trunk trie word)
-		       (cond
+	(let ((ctrie (copy trie)))
+	;; находим максимальный префикс, записываем его в rest
+	(multiple-value-bind (trunk rest) (trunk ctrie word)
+		(cond
 			((not (null rest))
-			 ;; если суфикс не нулевой (такого значения ещё нет) добавляем
-			 ;; в суффиксы этого узла все остальные суфиксы слова
-			 (push (make-suffix rest) (suffixes trunk))))) trie)
+				;; если суфикс не нулевой (такого значения ещё нет) добавляем
+				;; в суффиксы этого узла все остальные суфиксы слова
+				; находим максимальный префикс, записываем его в rest
+				(push (make-suffix rest) (suffixes trunk))))
+	ctrie)))
 
 ;; конструктор
 (defun make-trie (&key initial-contents)
-  (let ((trie (make-instance 'trie)))
-    (loop :for word :in initial-contents
-          :do (insert trie word)) trie))
+	(create-trie (make-instance 'trie) initial-contents))
+
+(defun create-trie (trie initial-contents)
+	(if (null initial-contents) trie
+		(if (null (cdr initial-contents))
+			(insert trie (car initial-contents))
+			(create-trie (insert trie (car initial-contents)) (cdr initial-contents)))))
 
 (defun words (trie &optional stack)
-  (let ((prefix (slot-value trie 'prefix))
-        (suffixes (slot-value trie 'suffixes)))
+  (let ((prefix (prefix trie))
+        (suffixes (suffixes trie)))
     (cond
      ;; если нода нулевая -- это конец
      ((and (null prefix) (null suffixes))
@@ -78,42 +94,49 @@
      ;; в цикле ходим по всем суфиксам из этой ноды и рекурсивно ждём от них все слова
      (t (loop :for suffix :in suffixes :append (words suffix (if prefix (cons prefix stack) stack)))))))
 
+(defun list-words (trie)
+	(if (null trie)
+		nil
+		(words trie)))
+
 (defun map-trie(trie fun)
-  (mapcar fun (trie:words trie)))
+  (mapcar fun (list-words trie)))
 
 (defun lreduce-trie(trie fun)
-  (reduce fun (trie:words trie)))
+  (reduce fun (list-words trie)))
 
 (defun rreduce-trie(trie fun)
-  (reduce fun (trie:words trie) :from-end t))
+  (reduce fun (list-words trie) :from-end t))
 
 (defun search-trie (trie prefix)
   (if (string= prefix "")
       ;; если префикс -- пустая строка, выводим все слова дерева
-      (words trie)
+      (list-words trie)
     ;; иначе ищем, есть ли такой префикс в нашем дереве
     (multiple-value-bind (trunk rest) (trunk trie prefix)
 			 ;; если есть полное совпадение, т.е. rest = nil
 			 (if (null rest)
 			     (let ((len (1- (length prefix))))
 			       (mapcar (lambda (x) (concatenate 'string (subseq prefix 0 len) x))
-				       (words trunk))))))
+				       (list-words trunk))))))
   )
 
 (defun delete-trie (trie prefix)
-  (if (string= prefix "")
-      ;; если префикс -- пустая строка, выводим пустое дерево
-      (progn (setf (suffixes trie) nil) trie)
-    ;; ищем, есть ли такой префикс в нашем дереве
-    (multiple-value-bind (trunk rest) (trunk trie prefix)
-			 ;; если есть полное совпадение, т.е. rest = nil
-			 (if (null rest)
-					; присваеваем суфиксам этой ноды пустой список
-			     (setf (suffixes trunk) nil)) trie)))
+	(let ((ctrie (copy trie)))
+		(if (string= prefix "")
+			;; если префикс -- пустая строка, выводим пустое дерево
+			(setf (suffixes ctrie) nil)
+			;; ищем, есть ли такой префикс в нашем дереве
+			(multiple-value-bind (trunk rest) (trunk ctrie prefix)
+					;; если есть полное совпадение, т.е. rest = nil
+					(if (null rest)
+							; присваеваем суфиксам этой ноды пустой список
+						(setf (suffixes trunk) nil))))
+	ctrie))
 
 (defun sum-tries (trie-1 trie-2)
-  (let ((words-1 (words trie-1))
-        (words-2 (words trie-2)))
+  (let ((words-1 (list-words trie-1))
+        (words-2 (list-words trie-2)))
     (let ((new-words (copy-list words-1)))
       (dolist (w words-2)
         (cond ((null (member w words-1 :test #'string=))

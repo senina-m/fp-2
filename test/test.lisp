@@ -21,11 +21,17 @@
   (not (set-exclusive-or (trie:list-words t1) (trie:list-words t2) :test #'string=)))
 
 (defun gen-str (len)
-  (check-it:generate (check-it:generator (string :min-length 2 :max-length len))))
+	(let ((l 
+		   (check-it:generate (check-it:generator (list (character #\a #\z) :min-length 0 :max-length len)))))
+	(if (null l)
+		nil
+		(concatenate 'string l))))
 
-(defun gen-str-list (str-len list-len)
-  (loop for i from 1 to list-len
-	collect (gen-str str-len)))
+(defun gen-str-list()
+	(let ((list-len (check-it:generate (check-it:generator (integer -1 10))))
+        (str-len (check-it:generate (check-it:generator (integer 0 10)))))
+        (loop for i from 0 to list-len
+			collect (gen-str str-len))))
 
 (defun compare-files (fst-name snd-name)
   (with-open-file (i-res fst-name
@@ -96,7 +102,7 @@
   (compare-files res-name answer-name))
 
 (defun create-property-based()
-  (let ((lst1 (gen-str-list 4 5)))
+  (let ((lst1 (gen-str-list)))
     (let ((lst2  (reverse (copy-list lst1))))
       (compare-tries (trie:make-trie :initial-contents lst1)
                      (trie:make-trie :initial-contents lst2)))))
@@ -109,8 +115,8 @@
 					;                 (mapcar #'(lambda(x) (format output "~a~%" x)) (sort lst2  #'string-lessp))))
 
 (defun sum-property-based ()
-  (let ((lst1 (gen-str-list 4 5))
-        (lst2 (gen-str-list 4 5)))
+  (let ((lst1 (gen-str-list))
+        (lst2 (gen-str-list)))
     (compare-tries (trie:sum-tries
                     (trie:make-trie :initial-contents lst1)
                     (trie:make-trie :initial-contents lst2))
@@ -119,7 +125,7 @@
                     (trie:make-trie :initial-contents lst1)))))
 
 (defun insert-property-based ()
-  (let ((lst (gen-str-list 4 5)))
+  (let ((lst (gen-str-list)))
     (let ((isrt (car lst))
           (init (cdr lst)))
       (compare-tries (trie:insert (trie:make-trie :initial-contents init) isrt)
